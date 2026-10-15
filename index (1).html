@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firebrand Press — Letterpress Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --ink: #1c1712;
+    --ink-soft: #2c241c;
+    --paper: #f1ead9;
+    --paper-dim: #d9cfb7;
+    --red: #b23a2e;
+    --gold: #c99a2e;
+    --olive: #5c5a3c;
+    --rule: rgba(241,234,217,0.18);
+    --rule-dark: rgba(28,23,18,0.14);
+    --display: 'Big Shoulders Display', sans-serif;
+    --body: 'Source Serif 4', serif;
+    --mono: 'Space Mono', monospace;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+  }
+
+  a{ color: inherit; }
+  :focus-visible{ outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  .wrap{ max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+
+  /* Crop marks — signature motif, echoes print-shop registration marks */
+  .crop{
+    position: relative;
+  }
+  .crop::before, .crop::after{
+    content:"";
+    position:absolute;
+    width: 18px; height: 18px;
+    border-left: 1.5px solid currentColor;
+    border-top: 1.5px solid currentColor;
+    opacity: 0.55;
+  }
+  .crop::before{ top: 18px; left: 18px; }
+  .crop::after{ top: 18px; right: 18px; border-left:none; border-right: 1.5px solid currentColor; }
+  .crop-bl, .crop-br{ display:none; }
+
+  /* ---------- Header ---------- */
+  header{
+    position: fixed; top:0; left:0; right:0; z-index: 50;
+    background: linear-gradient(to bottom, rgba(28,23,18,0.92), rgba(28,23,18,0));
+    padding: 20px 0 40px;
+  }
+  .nav{ display:flex; align-items:center; justify-content: space-between; }
+  .mark{
+    font-family: var(--display); font-weight: 900; font-size: 22px;
+    letter-spacing: 0.02em; text-decoration:none; text-transform: uppercase;
+  }
+  .mark span{ color: var(--red); }
+  nav ul{ list-style:none; display:flex; gap: 28px; margin:0; padding:0; }
+  nav a{ text-decoration:none; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.8; }
+  nav a:hover{ opacity:1; color: var(--gold); }
+  .nav-toggle{ display:none; }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    min-height: 100svh;
+    display:flex; flex-direction:column; justify-content:center;
+    position: relative;
+    color: var(--paper);
+    padding: 140px 0 80px;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse at 15% 20%, rgba(178,58,46,0.16), transparent 55%),
+      radial-gradient(ellipse at 85% 80%, rgba(201,154,46,0.10), transparent 50%);
+    pointer-events:none;
+  }
+  .ticket-no{
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.15em;
+    color: var(--gold); text-transform: uppercase; margin: 0 0 18px;
+    opacity: 0; animation: fadeUp 0.7s ease forwards; animation-delay: 0.1s;
+  }
+  .hero h1{
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: clamp(64px, 12vw, 168px);
+    line-height: 0.86;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin: 0;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.4), 0 2px 12px rgba(0,0,0,0.3);
+    opacity: 0; animation: fadeUp 0.8s ease forwards; animation-delay: 0.25s;
+  }
+  .hero h1 em{
+    font-style: normal;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--paper);
+  }
+  .hero-sub{
+    display:flex; align-items:flex-end; justify-content:space-between; gap: 40px;
+    margin-top: 44px;
+    flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.8s ease forwards; animation-delay: 0.4s;
+  }
+  .hero-sub p{
+    font-size: 19px; line-height: 1.55; max-width: 30ch; margin:0; color: var(--paper-dim);
+  }
+  .hero-meta{ font-family: var(--mono); font-size: 12px; line-height: 2; text-align:right; color: var(--paper-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .hero-meta strong{ color: var(--gold); }
+
+  @keyframes fadeUp{ from{ opacity:0; transform: translateY(18px);} to{ opacity:1; transform: translateY(0);} }
+
+  .scroll-cue{
+    position:absolute; bottom: 28px; left: 32px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--paper-dim); display:flex; align-items:center; gap:10px;
+  }
+  .scroll-cue .bar{ width:1px; height: 34px; background: linear-gradient(var(--paper-dim), transparent); animation: drop 1.8s ease-in-out infinite; }
+  @keyframes drop{ 0%{ transform: scaleY(0); transform-origin: top;} 50%{ transform: scaleY(1); transform-origin: top;} 50.01%{ transform-origin: bottom; } 100%{ transform: scaleY(0); transform-origin: bottom; } }
+
+  /* ---------- Section shell ---------- */
+  section{ padding: 120px 0; position: relative; }
+  .eyebrow{
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--gold); margin: 0 0 14px; display:flex; align-items:center; gap: 12px;
+  }
+  .eyebrow::before{ content:""; width: 26px; height:1px; background: var(--gold); display:inline-block; }
+  h2{
+    font-family: var(--display); font-weight: 900; text-transform: uppercase;
+    font-size: clamp(36px, 5.2vw, 60px); line-height: 0.95; margin: 0 0 20px; letter-spacing: -0.005em;
+  }
+  .lede{ font-size: 18px; line-height: 1.6; color: var(--paper-dim); max-width: 60ch; margin: 0 0 0; }
+
+  /* ---------- Job ticket / services ---------- */
+  .ticket{
+    background: var(--paper); color: var(--ink);
+    border-radius: 2px;
+    padding: 56px;
+    margin-top: 56px;
+  }
+  .ticket-head{
+    display:flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 2px solid var(--ink); padding-bottom: 18px; margin-bottom: 8px;
+    font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .line-item{
+    display:grid; grid-template-columns: 64px 1fr auto; gap: 24px; align-items: start;
+    padding: 28px 0; border-bottom: 1px solid var(--rule-dark);
+  }
+  .line-item:last-child{ border-bottom:none; }
+  .li-no{ font-family: var(--display); font-weight: 900; font-size: 32px; color: var(--red); line-height:1; }
+  .li-body h3{ font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 22px; margin: 0 0 8px; letter-spacing: 0.01em; }
+  .li-body p{ margin:0; color: var(--ink-soft); font-size: 15.5px; line-height: 1.55; max-width: 52ch; }
+  .li-rate{ font-family: var(--mono); font-size: 13px; color: var(--olive); white-space: nowrap; padding-top: 6px; }
+
+  /* ---------- Stock & ink swatches ---------- */
+  .swatch-grid{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 2px;
+    margin-top: 56px; background: var(--rule); border: 1px solid var(--rule);
+  }
+  .swatch{
+    background: var(--ink); padding: 26px 20px 20px; min-height: 150px;
+    display:flex; flex-direction:column; justify-content: flex-end; gap: 6px;
+  }
+  .swatch .chip{ width: 34px; height: 34px; border-radius: 50%; margin-bottom: 10px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15); }
+  .swatch .name{ font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 17px; }
+  .swatch .code{ font-family: var(--mono); font-size: 11px; color: var(--paper-dim); letter-spacing: 0.05em; }
+
+  /* ---------- Press run / process ---------- */
+  .run{
+    display:flex; overflow-x: auto; gap: 0; margin-top: 64px;
+    scrollbar-width: thin;
+    padding-bottom: 8px;
+  }
+  .run::-webkit-scrollbar{ height: 5px; }
+  .run::-webkit-scrollbar-thumb{ background: var(--rule); }
+  .step{
+    flex: 0 0 240px; padding: 0 28px 0 0; position: relative;
+  }
+  .step:not(:last-child)::after{
+    content:""; position:absolute; top: 10px; right: -2px; width: calc(100% - 20px); height: 1px;
+    background: repeating-linear-gradient(to right, var(--rule) 0 6px, transparent 6px 12px);
+  }
+  .step .dot{ width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--gold); margin-bottom: 22px; position: relative; z-index:1; background: var(--ink); }
+  .step h4{ font-family: var(--display); font-weight:700; text-transform: uppercase; font-size: 19px; margin: 0 0 8px; }
+  .step p{ font-size: 14.5px; color: var(--paper-dim); line-height: 1.5; margin:0; }
+
+  /* ---------- Proof / contact ---------- */
+  .proof{
+    background: var(--paper); color: var(--ink);
+    padding: 64px 56px; margin-top: 56px; position: relative;
+    display:grid; grid-template-columns: 1.2fr 1fr; gap: 48px;
+  }
+  .proof h3{ font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: 34px; margin: 0 0 14px; }
+  .proof p{ margin:0 0 28px; color: var(--ink-soft); line-height: 1.6; max-width: 44ch; }
+  .stamp{
+    justify-self: end; align-self: start;
+    border: 2px solid var(--red); color: var(--red);
+    padding: 10px 18px; transform: rotate(6deg);
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    border-radius: 3px;
+  }
+  .form-row{ display:flex; gap: 14px; flex-wrap: wrap; }
+  input[type=email]{
+    flex: 1 1 240px; background: transparent; border: none; border-bottom: 2px solid var(--ink);
+    padding: 10px 4px; font-family: var(--body); font-size: 16px; color: var(--ink);
+  }
+  input[type=email]::placeholder{ color: rgba(28,23,18,0.45); }
+  .btn{
+    background: var(--red); color: var(--paper); border: none; cursor: pointer;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 14px 26px; border-radius: 2px; transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .btn:hover{ background: #921f16; transform: translateY(-1px); }
+
+  footer{
+    padding: 48px 0 60px; border-top: 1px solid var(--rule);
+    display:flex; justify-content: space-between; align-items:center; flex-wrap: wrap; gap: 16px;
+    font-family: var(--mono); font-size: 12px; color: var(--paper-dim); text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  footer a{ text-decoration: none; }
+  footer a:hover{ color: var(--gold); }
+
+  @media (max-width: 720px){
+    .wrap{ padding: 0 20px; }
+    nav ul{ gap: 16px; }
+    .ticket{ padding: 32px 24px; }
+    .line-item{ grid-template-columns: 40px 1fr; }
+    .li-rate{ grid-column: 1 / -1; padding-top: 0; }
+    .proof{ grid-template-columns: 1fr; padding: 40px 24px; }
+    .stamp{ justify-self: start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#" class="mark">Firebrand<span>·</span>Press</a>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#stock">Stock &amp; Ink</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#contact">Get a Proof</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero crop">
+    <div class="wrap">
+      <p class="ticket-no">Job No. 0417 — Est. 2014, Cork City</p>
+      <h1>Ink meets<br>paper, by <em>hand</em></h1>
+      <div class="hero-sub">
+        <p>A small letterpress studio setting type by hand and running every sheet through a 1962 Vandercook proof press. No plastic plates pretending to be craft — real metal, real impression.</p>
+        <div class="hero-meta">
+          Founded <strong>2014</strong><br>
+          Press <strong>Vandercook SP-15</strong><br>
+          Runs <strong>50 &ndash; 2,000</strong> sheets
+        </div>
+      </div>
+    </div>
+    <div class="scroll-cue"><span class="bar"></span> Scroll the ticket</div>
+  </section>
+
+  <section id="services">
+    <div class="wrap">
+      <p class="eyebrow">What we run</p>
+      <h2>Order of Work</h2>
+      <p class="lede">Every job gets a ticket. These are the four line items most clients start with — mix and match, or bring something stranger.</p>
+
+      <div class="ticket">
+        <div class="ticket-head">
+          <span>Firebrand Press — Job Ticket</span>
+          <span>Terms: 50% on approval</span>
+        </div>
+
+        <div class="line-item">
+          <div class="li-no">01</div>
+          <div class="li-body">
+            <h3>Wedding &amp; Social Stationery</h3>
+            <p>Invitations, save-the-dates and place cards, set in foundry type or photopolymer, on 100% cotton stock.</p>
+          </div>
+          <div class="li-rate">from &euro;6 / piece</div>
+        </div>
+
+        <div class="line-item">
+          <div class="li-no">02</div>
+          <div class="li-body">
+            <h3>Business &amp; Studio Cards</h3>
+            <p>One to three ink colours, deep impression on 32pt cotton. Plates kept on file for reorders.</p>
+          </div>
+          <div class="li-rate">from &euro;180 / 250</div>
+        </div>
+
+        <div class="line-item">
+          <div class="li-no">03</div>
+          <div class="li-body">
+            <h3>Limited-Edition Broadsides</h3>
+            <p>Poster-scale runs for bands, publishers and small presses. Hand-set headlines, numbered editions.</p>
+          </div>
+          <div class="li-rate">quoted per run</div>
+        </div>
+
+        <div class="line-item">
+          <div class="li-no">04</div>
+          <div class="li-body">
+            <h3>Workshops</h3>
+            <p>Half-day sessions on the Vandercook — compose a line of type and pull your own proof to take home.</p>
+          </div>
+          <div class="li-rate">&euro;95 / seat</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stock">
+    <div class="wrap">
+      <p class="eyebrow">Materials on hand</p>
+      <h2>Stock &amp; Ink</h2>
+      <p class="lede">What's currently loaded in the shop. Custom stock and Pantone ink mixing available on request, minimums apply.</p>
+
+      <div class="swatch-grid">
+        <div class="swatch"><div class="chip" style="background:#b23a2e"></div><div class="name">Firebrand Red</div><div class="code">Rubber-base · PMS 187</div></div>
+        <div class="swatch"><div class="chip" style="background:#1c1712"></div><div class="name">Foundry Black</div><div class="code">Oil-base · dense</div></div>
+        <div class="swatch"><div class="chip" style="background:#c99a2e"></div><div class="name">Foil Gold</div><div class="code">Hot-stamp · 24k leaf</div></div>
+        <div class="swatch"><div class="chip" style="background:#5c5a3c"></div><div class="name">Field Olive</div><div class="code">Rubber-base · matte</div></div>
+        <div class="swatch"><div class="chip" style="background:#f1ead9;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.35)"></div><div class="name">Cotton 220</div><div class="code">220lb · duplex</div></div>
+        <div class="swatch"><div class="chip" style="background:#d9cfb7;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.25)"></div><div class="name">Kraft 130</div><div class="code">130lb · uncoated</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="wrap">
+      <p class="eyebrow">How a job moves</p>
+      <h2>The Press Run</h2>
+      <p class="lede">Five stages, same order every time, from your file to a stack of dry sheets ready to ship.</p>
+
+      <div class="run">
+        <div class="step"><div class="dot"></div><h4>01 Proof</h4><p>Digital layout approved, then a single hand-pulled proof for sign-off.</p></div>
+        <div class="step"><div class="dot"></div><h4>02 Plate</h4><p>Photopolymer or metal type locked into the chase.</p></div>
+        <div class="step"><div class="dot"></div><h4>03 Mix</h4><p>Ink mixed to match, drawn down and checked against your swatch.</p></div>
+        <div class="step"><div class="dot"></div><h4>04 Run</h4><p>Sheets fed by hand through the Vandercook, one colour at a time.</p></div>
+        <div class="step"><div class="dot"></div><h4>05 Dry &amp; Trim</h4><p>24-hour cure, then trimmed to size and packed flat.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <p class="eyebrow">Start a job</p>
+      <h2>Request a Proof</h2>
+
+      <div class="proof crop">
+        <div>
+          <h3>Tell us what you're printing</h3>
+          <p>Send a note with quantity, ink colours and deadline. We'll write back with a ticket and timeline within two working days.</p>
+          <form class="form-row" onsubmit="event.preventDefault(); this.querySelector('.btn').textContent='Sent — thank you';">
+            <input type="email" placeholder="you@studio.com" required aria-label="Email address">
+            <button class="btn" type="submit">Request Proof</button>
+          </form>
+        </div>
+        <div class="stamp">Press-Ready<br>Approved</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:16px;">
+    <span>&copy; 2026 Firebrand Press · Cork City, Ireland</span>
+    <span><a href="mailto:hello@firebrandpress.example">hello@firebrandpress.example</a> · <a href="#">Instagram</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
